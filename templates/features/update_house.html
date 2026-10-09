@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Update House</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+    <style>
+      .house {
+        background-color: white;
+        padding: 20px;
+        border: solid 1px #ddd;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h2>Update House</h2>
+      <nav>
+        <a href="{{ url_for('home') }}">Home</a> | 
+        <a href="{{ url_for('houses') }}">Houses</a> |
+        <a href="{{ url_for('rent_house') }}">Rent House</a> |
+        <a href="{{ url_for('add_house') }}">Add House</a> |
+        <a href="{{ url_for('rental_history') }}">Rental History</a> | 
+        <a href="{{ url_for('update_house') }}">Update House</a>
+      </nav>
+    </header>
+    <main>
+
+      {% if message %}
+        <p>{{ message }}</p>
+      {% endif %}
+
+      <form method="POST" action="{{ url_for('get_house') }}">
+        <fieldset>
+          <label for="house_id">House ID</label>
+          <input type="text" id="house_id" name="house_id" placeholder="Enter house ID" required>
+        </fieldset>
+        <button type="submit">Submit</button>
+      </form>
+
+      {% if house %}
+        <div class="house">
+          <p>House ID: {{ house['house_id'] }}</p>
+          <p>Owner: {{ house['owner_name'] }}</p>
+          <p>House Name: {{house['house_name']}}</p>
+          <p>House Address: {{ house['house_address'] }}</p>
+          <p>Monthly Rent: {{ house['monthly_rent'] }}</p>
+          <p>Bedrooms: {{ house['bedrooms'] }}</p>
+          <p>Bathrooms: {{ house['bathrooms'] }}</p>
+          <p>House Type: {{ house['house_type'] }}</p>
+          <p>Date Added {{ house['date_added'] }}</p>
+          <p>Status: {{ house['availability'] }}</p>
+        </div>
+        <form method="POST" action="{{ url_for('update_house') }}" onsubmit="return confirm('Are you sure you want to update this house?');">
+          <fieldset>
+            <legend>Update House</legend>
+            <input type="hidden" name="house_id" value="{{ house['house_id'] }}">
+            <label for="owner">Owner (optional)</label>
+            <input type="text" id="owner" name="owner" value="{{ form_data.get('owner',)}}" placeholder="Enter owner name">
+            <label for="house_name">House Name (optional)</label>
+            <input type="text" id="house_name" name="house_name" value="{{ form_data.get('house_name', '') }}" placeholder="Enter house name">
+            <label for="house_address">House Address (optional)</label>
+            <input type="text" id="house_address" name="house_address" value="{{ form_data.get('house_address', '') }}" placeholder="Enter house address">
+            <label for="monthly_rent">Monthly Rent (optional)</label>
+            <input type="number" id="monthly_rent" name="monthly_rent" value="{{ form_data.get('monthly_rent ')}}" placeholder="Enter monthly rent">
+            <labe for="bedrooms">Bedrooms (optional)</labe>
+            <input type="number" id="bedrooms" name="bedrooms" value="{{ form_data.get('bedrooms', '') }}" placeholder="Enter no. of bedrooms">
+            <label for="bathrooms">Bathrooms (optional)</label>
+            <input type="number" id="bathrooms" name="bathrooms" value="{{ form_data.get('bathrooms', '') }}" placeholder="Enter no. of bathrooms">
+            <label for="house_type">House Type (optional)</label>
+            <input type="text" id="house_type" name="house_type" value="{{ form_data.get('house_type', '') }}" placeholder="Enter house type">
+          </fieldset>
+          <button type="submit">Update House</button>
+        </form>
+      {% else %}
+        <p>No house found.</p>
+      {% endif %}
+
+      <form method="POST" action="{{ url_for('remove_house') }}" onsubmit="return confirm('Are you sure you want to remove this house?');">
+        <fieldset>
+          <legend>Remove House</legend>
+          <label for="house_id">House ID</label>
+          <input type="text" id="house_id" name="house_id" placeholder="Enter house ID" required>
+        </fieldset>
+        <button type="submit">Remove House</button>
+      </form>
+    </main>
+  </body>
+</html>

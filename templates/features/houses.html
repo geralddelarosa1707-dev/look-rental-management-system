@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Available Houses</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+    <style>
+      .post {
+        background-color: white;
+        padding: 20px;
+        border: solid 1px #ddd;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+
+      .post h4 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h2>AVAILABLE HOUSES</h2>
+      <nav>
+        <a href="{{ url_for('home') }}">Home</a> | 
+        <a href="{{ url_for('houses') }}">Houses</a> |
+        <a href="{{ url_for('rent_house') }}">Rent House</a> |
+        <a href="{{ url_for('add_house') }}">Add House</a> |
+        <a href="{{ url_for('rental_history') }}">Rental History</a> |
+        <a href="{{ url_for('update_house') }}">Update House</a>
+      </nav>
+    </header>
+    <main>
+      <h3>Find a house that fits your needs.</h3>
+
+      {% if message %}
+        <p>{{ message }}</p>
+      {% endif %}
+      
+      <form method="POST" action="{{ url_for('search_house') }}">
+        <fieldset>
+          <legend><h4>Search House</h4></legend>
+          <label for="location">Location</label>
+          <input type="text" id="location" name="location" placeholder="Enter location">
+          <label for="house_type">House Type</label>
+          <input type="text" id="house_type" name="house_type" placeholder="Enter house type">
+          <label for="min_bedrooms">Minimum Bedrooms</label>
+          <input type="number" id="min_bedrooms" name="min_bedrooms" placeholder="Enter minimum bedrooms">
+          <label for="min_bathrooms">Minimum Bathrooms</label>
+          <input type="number" id="min_bathrooms" name="min_bathrooms" placeholder="Enter minimum bathrooms">
+          <label for="max_monthly_rent">Maximum Monthly Rent</label>
+          <input type="number" id="max_monthly_rent" name="max_monthly_rent" placeholder="Enter maximum monthly rent" step="0.01">
+        </fieldset>
+        <button type="submit">Search House</button>
+      </form>
+      <section>
+        <article class="post">
+
+          {% for house in houses %}
+            <h4>{{ house['house_name'] }}</h4>
+            <details>
+              <summary>Show Details</summary>
+              <div>
+                <p>House ID: {{ house['house_id'] }}</p>
+                <p>Owner: {{ house['owner_name'] }}</p>
+                <p>Location: {{ house['house_address'] }}</p>
+                <p>Monthly Rent: ₱{{ house['monthly_rent'] }}</p>
+                <p>Bedrooms: {{ house['bedrooms'] }}</p>
+                <p>Bathrooms: {{ house['bathrooms'] }}</p>
+                <p>House Type: {{ house['house_type'] }}</p>
+                <p>Date Added: {{ house['date_added'] }}</p>
+                <p>Status: {{ house['availability'] }}</p>
+                <button type="submit">Rent House</button>
+              </div>
+            </details>
+          {% endfor %}
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

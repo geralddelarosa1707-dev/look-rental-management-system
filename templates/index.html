@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>House Rental</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <style>
+      header h1 {
+        margin: 0;
+      }
+
+      .welcome {
+        background-color: white;
+        padding: 20px;
+        border: solid 1px #ddd;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>HOUSE RENTAL</h1>
+      <nav>
+        <a href="{{ url_for('home') }}">Home</a> | 
+        <a href="{{ url_for('houses') }}">Houses</a> |
+        <a href="{{ url_for('rent_house') }}">Rent House</a> |
+        <a href="{{ url_for('add_house') }}">Add House</a> |
+        <a href="{{ url_for('rental_history') }}">Rental History</a> |
+        <a href="{{ url_for('update_house') }}">Update House</a> |
+        {% if session.get('user_id') %}
+          <a href="{{ url_for('logout') }}" onclick="return confirm('Are you sure you want to logout?');">Logout</a>
+        {% else %}
+          <a href="{{ url_for('login') }}">Login/Signup</a>
+        {% endif %}
+      </nav>
+    </header>
+    <main>
+      
+      {% with messages=get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      {% endwith %}
+      
+      <section class="welcome">
+        <h3>Find Your New Home</h3>
+        <p>Find affordable houses available for rent.</p>
+        <button type="button">Browse Houses</button>
+      </section>
+      <h3>Featured House</h3>
+    </main>
+  </body>
+</html>

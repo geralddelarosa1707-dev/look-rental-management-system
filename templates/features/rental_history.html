@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rental History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+    <style>
+      .rental {
+        background-color: white;
+        padding: 20px;
+        border: solid 1px #ddd;
+        margin-bottom: 20px;
+        }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h2>Rental History</h2>
+      <nav>
+        <a href="{{ url_for('home') }}">Home</a> |
+        <a href="{{ url_for('houses') }}">Houses</a> |
+        <a href="{{ url_for('rent_house') }}">Rent House</a> |
+        <a href="{{ url_for('add_house') }}">Add House</a> | 
+        <a href="{{ url_for('rental_history') }}">Rental History</a> |
+        <a href="{{ url_for('update_house') }}">Update House</a>
+      </nav>
+    </header>
+    <main>
+
+      {% with messages=get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('return_rental') }}" onsubmit="return confirm('Are you sure you want to return this rental?');">
+        <fieldset>
+          <legend>Return Rental</legend>
+          <label for="rental_id">Rental ID</label>
+          <input type="text" id="rental_id" name="rental_id" value="{{ form_data.get('rental_id', '') }}" placeholder="Enter rental ID" required>
+        </fieldset>
+        <button type="submit">Return</button>
+      </form>
+      <form method="POST" action="{{ url_for('cancel_rental') }}" onsubmit="return confirm('Are you sure you want to cancel this rental?');">
+        <fieldset>
+          <legend>Cancel Rental</legend>
+          <label for="rental_id">Rental ID</label>
+          <input type="text" id="rental_id" name="rental_id" value="{{ form_data.get('rental_id', '') }}" placeholder="Enter rental ID" required>
+          <label for="cancel_reason">Cancel Reason</label>
+          <input type="text" id="cancel_reason" name="cancel_reason" value="{{ form_data.get('cancel_reason', '') }}" placeholder="Enter cancel reason" required>
+        </fieldset>
+        <button type="submit">Cancel</button>
+      </form>
+
+      {% for rental in rentals %}
+        <div class="rental">
+          <p>Rental ID: {{ rental['rental_id'] }}</p>
+          <p>House ID: {{ rental['house_id'] }}</p>
+          <p>Renter Name: {{ rental['renter_name'] }}</p>
+          <p>Contact Number: {{ rental['contact_num'] }}</p>
+          <p>Date Rented: {{ rental['date_rented'] }}</p>
+          <p>Duration Months: {{ rental['duration_months'] }}</p>
+          <p>Status: {{ rental['status'] }}</p>
+          <p>Closed Date: {{ rental['closed_date'] }}</p>
+          <p>Cancel Reason: {{ rental['cancel_reason'] }}</p>
+        </div>
+      {% endfor %}
+    </main>
+  </body>
+</html>
