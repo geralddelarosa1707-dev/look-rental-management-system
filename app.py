@@ -333,7 +333,7 @@ def update_house():
     try:
       house_id = int(request.form.get('house_id', "").strip())
     except ValueError:
-      return render_template("features/update_house.html", message="Please enter a valid number.", house=None)
+      return render_template("features/update_house.html", message="Please enter a valid number.", house=None, form_data={})
           
     owner = request.form.get('owner', "").strip().upper()
     house_name = request.form.get('house_name', "").strip().lower()
