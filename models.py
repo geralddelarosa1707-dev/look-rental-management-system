@@ -6,7 +6,6 @@ class User:
   user_id: Primary Key[int]
   email: str Unique
   password: str
-  role: str Default 'TENANT'
 
 @dataclass
 class House:

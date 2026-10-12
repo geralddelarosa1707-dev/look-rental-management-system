@@ -24,8 +24,7 @@ class Database:
     CREATE TABLE IF NOT EXISTS Users (
     user_id INTEGER PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    role TEXT NOT NULL DEFAULT 'TENANT'
+    password TEXT NOT NULL
     );
     """)
 

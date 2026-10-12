@@ -261,7 +261,6 @@ def cancel_rental():
         
   if not cancel_reason:
     flash("Cancellation reason is required.", "warning")
-    session["form_data"] = request.form.to_dict()
     return redirect(url_for("rental_history"))
           
   valid = manager_obj.validation.can_close_rental(rental_id)
@@ -269,6 +268,7 @@ def cancel_rental():
   if not valid['success']:
     logger.warning(f"CANCEL_HOUSE_FAILED | REASON={valid['log_message']}")
     flash(valid['message'], "warning")
+    session["form_data"] = request.form.to_dict()
     return redirect(url_for("rental_history"))
         
   rental = manager_obj.get_rental(rental_id)
@@ -315,14 +315,14 @@ def get_house():
   try:
     house_id = int(request.form.get('house_id', "").strip())
   except ValueError:
-    return render_template("features/update_house.html", message="Please enter a valid number.", house=None)
+    return render_template("features/update_house.html", message="Please enter a valid number.", form_data={}, house=None)
         
   house = manager_obj.get_house(house_id)
 
   if not house:
-    return render_template("features/update_house.html", message=f"House ID {house_id} was not found.", house=None)
+    return render_template("features/update_house.html", message=f"House ID {house_id} was not found.", form_data={}, house=None)
 
-  return render_template("features/update_house.html", house=house)
+  return render_template("features/update_house.html", form_data={}, house=house)
 
 @app.route("/update-house", methods=["GET", "POST"])
 @login_required
@@ -333,7 +333,7 @@ def update_house():
     try:
       house_id = int(request.form.get('house_id', "").strip())
     except ValueError:
-      return render_template("features/update_house.html", message="Please enter a valid number.", house=None)
+      return render_template("features/update_house.html", message="Please enter a valid number.", form_data={}, house=None)
           
     owner = request.form.get('owner', "").strip().upper()
     house_name = request.form.get('house_name', "").strip().lower()
@@ -352,7 +352,7 @@ def update_house():
           
     if not valid['success']:
       logger.warning(f"UPDATE_HOUSE_FAILED | REASON={valid['log_message']}")
-      return render_template("features/update_house.html", form_data=request.form, message=valid['message'])
+      return render_template("features/update_house.html", form_data=request.form, message=valid['message'], house=None)
           
     manager_obj.patch_house(house_id, owner, house_name, house_address, monthly_rent, bedrooms, bathrooms, house_type)
           
@@ -361,7 +361,7 @@ def update_house():
     flash(f"House ID {house_id} updated successfully!", "success")
     return redirect(url_for("home"))
 
-  return render_template("features/update_house.html", house=None, form_data={})
+  return render_template("features/update_house.html", form_data={}, house=None)
 
 @app.route("/remove-house", methods=["POST"])
 def remove_house():
