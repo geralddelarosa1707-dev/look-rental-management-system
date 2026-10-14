@@ -261,6 +261,7 @@ def cancel_rental():
         
   if not cancel_reason:
     flash("Cancellation reason is required.", "warning")
+    session["form_data"] = request.form.to_dict()
     return redirect(url_for("rental_history"))
           
   valid = manager_obj.validation.can_close_rental(rental_id)
@@ -370,13 +371,13 @@ def remove_house():
   try:
     house_id = int(request.form.get('house_id', "").strip())
   except ValueError:
-    return render_template("features/update_house.html", message="Please enter a valid number.")
+    return render_template("features/update_house.html", message="Please enter a valid number.", form_data={}, house=None)
           
   valid = manager_obj.validation.can_remove_house(house_id)
         
   if not valid['success']:
     logger.warning(f"REMOVE_HOUSE_FAILED | REASON={valid['log_message']}")
-    return render_template("features/update_house.html", message=valid['message'])
+    return render_template("features/update_house.html", message=valid['message'], form_data={}, house=None)
           
   manager_obj.delete_house(house_id)
           
